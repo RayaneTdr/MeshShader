@@ -1,0 +1,148 @@
+# Copyright (c) 2023 Sapphire's Suite. All Rights Reserved.
+
+name: Benchmark
+
+
+# Trigger the action.
+on:
+  push:
+    branches:
+      - benchmark
+      - bench_*
+
+
+
+# Settings common to all jobs.
+defaults:
+  run:
+    shell: bash
+
+
+
+# Variables common to all jobs.
+env:
+  CMAKE_V: '3.17.0'
+  CMAKE_OPTIONS: '-DSA_CI=1 -DSA_MATHS_BUILD_BENCHMARK_OPT=ON -DSA_MATHS_USE_LOGGER_OPT=OFF'
+
+
+
+# Job matrix
+jobs:
+
+  GNU:
+    name: GNU (${{ matrix.compiler_v }}, SIMD:${{ matrix.option_SIMD }})
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler_v: [9, 10, 11]
+        option_SIMD: [ON, OFF]
+
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - uses: seanmiddleditch/gha-setup-ninja@master # Install Ninja.
+
+      - name: "[Package] Install GCC"
+        run: sudo apt-get install g++-${{ matrix.compiler_v }}
+
+      - name: Generate Project
+        run: cmake --preset="GCC" ${{ env.CMAKE_OPTIONS }} -DSA_MATHS_INTRINSICS_OPT=${{ matrix.option_SIMD }}
+
+      - name: Build Project
+        run: cmake --build --preset="GCC Release" --target SA_MathsBenchmark --verbose
+
+      - name: Run Benchmark
+        run: cd "CMake/build/GCC Release/bin" && ./SA_MathsBenchmark
+
+
+
+  Clang:
+    name: Clang (${{ matrix.compiler_v }}, SIMD:${{ matrix.option_SIMD }})
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler_v: [9, 10, 11, 12]
+        option_SIMD: [ON, OFF]
+
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - uses: seanmiddleditch/gha-setup-ninja@master # Install Ninja.
+
+      - name: "[Package] Install LLVM and Clang"
+        run: sudo apt-get install clang-${{ matrix.compiler_v }}
+
+      - name: Generate Project
+        run: cmake --preset="Clang" ${{ env.CMAKE_OPTIONS }} -DSA_MATHS_INTRINSICS_OPT=${{ matrix.option_SIMD }}
+
+      - name: Build Project
+        run: cmake --build --preset="Clang Release" --target SA_MathsBenchmark --verbose
+
+      - name: Run Benchmark
+        run: cd "CMake/build/Clang Release/bin" && ./SA_MathsBenchmark
+
+
+
+  MSVC_2019:
+    name: MSVC (2019, SIMD:${{ matrix.option_SIMD }})
+
+    runs-on: windows-2019
+
+    strategy:
+      fail-fast: false
+      matrix:
+        option_SIMD: [ON, OFF]
+
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Generate Project
+        run: cmake --preset=VS_2019 ${{ env.CMAKE_OPTIONS }} -DSA_MATHS_INTRINSICS_OPT=${{ matrix.option_SIMD }}
+
+      - name: Build Project
+        run: cmake --build --preset="VS_2019 Release" --target SA_MathsBenchmark --verbose
+
+      - name: Run Benchmark
+        run: cd CMake/build/VS_2019/bin/Release && ./SA_MathsBenchmark
+
+
+
+  MSVC_2022:
+    name: MSVC (2022, SIMD:${{ matrix.option_SIMD }})
+
+    runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        option_SIMD: [ON, OFF]
+
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Generate Project
+        run: cmake --preset=VS_2022 ${{ env.CMAKE_OPTIONS }} -DSA_MATHS_INTRINSICS_OPT=${{ matrix.option_SIMD }}
+
+      - name: Build Project
+        run: cmake --build --preset="VS_2022 Release" --target SA_MathsBenchmark --verbose
+
+      - name: Run Benchmark
+        run: cd CMake/build/VS_2022/bin/Release && ./SA_MathsBenchmark

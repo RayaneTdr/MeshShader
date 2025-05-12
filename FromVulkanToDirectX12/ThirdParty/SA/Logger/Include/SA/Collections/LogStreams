@@ -1,0 +1,13 @@
+// Copyright (c) 2023 Sapphire's Suite. All Rights Reserved.
+
+#pragma once
+
+#ifndef SAPPHIRE_COLLECTIONS_LOG_STREAM_GUARD
+#define SAPPHIRE_COLLECTIONS_LOG_STREAM_GUARD
+
+#include <SA/Logger/Streams/ALogStream.hpp>
+
+#include <SA/Logger/Streams/Console/ConsoleLogStream.hpp>
+#include <SA/Logger/Streams/File/FileLogStream.hpp>
+
+#endif // GUARD

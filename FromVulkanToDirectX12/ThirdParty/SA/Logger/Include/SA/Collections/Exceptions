@@ -1,0 +1,27 @@
+// Copyright (c) 2023 Sapphire's Suite. All Rights Reserved.
+
+#pragma once
+
+#ifndef SAPPHIRE_COLLECTIONS_EXCEPTION_GUARD
+#define SAPPHIRE_COLLECTIONS_EXCEPTION_GUARD
+
+#include <SA/Logger/Exceptions/Exception.hpp>
+
+#include <SA/Logger/Exceptions/Exception_Equals.hpp>
+#include <SA/Logger/Exceptions/Exception_Equals0.hpp>
+#include <SA/Logger/Exceptions/Exception_Equals1.hpp>
+
+#include <SA/Logger/Exceptions/Exception_NotEquals.hpp>
+#include <SA/Logger/Exceptions/Exception_NotEquals0.hpp>
+#include <SA/Logger/Exceptions/Exception_NotEquals1.hpp>
+
+#include <SA/Logger/Exceptions/Exception_Nullptr.hpp>
+
+#include <SA/Logger/Exceptions/Exception_OutOfRange.hpp>
+#include <SA/Logger/Exceptions/Exception_OutOfArrayRange.hpp>
+
+#include <SA/Logger/Exceptions/Exception_IsValid.hpp>
+
+#include <SA/Logger/Exceptions/Exception_ReachBadAPI.hpp>
+
+#endif // GUARD

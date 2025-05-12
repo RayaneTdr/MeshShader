@@ -1,0 +1,12 @@
+// Copyright (c) 2023 Sapphire Development Team. All Rights Reserved.
+
+#pragma once
+
+#ifndef SAPPHIRE_MATHS_COLLECTIONS_ANGLE_GUARD
+#define SAPPHIRE_MATHS_COLLECTIONS_ANGLE_GUARD
+
+#include <SA/Maths/Angle/Degree.hpp>
+#include <SA/Maths/Angle/Radian.hpp>
+#include <SA/Maths/Angle/Constants.hpp>
+
+#endif // GUARD

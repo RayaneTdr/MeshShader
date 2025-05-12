@@ -1,0 +1,15 @@
+// Copyright (c) 2023 Sapphire Development Team. All Rights Reserved.
+
+#pragma once
+
+#ifndef SAPPHIRE_MATHS_COLLECTIONS_ALGORITHMS_GUARD
+#define SAPPHIRE_MATHS_COLLECTIONS_ALGORITHMS_GUARD
+
+#include <SA/Maths/Algorithms/Cos.hpp>
+#include <SA/Maths/Algorithms/Sin.hpp>
+#include <SA/Maths/Algorithms/Tan.hpp>
+#include <SA/Maths/Algorithms/Sqrt.hpp>
+#include <SA/Maths/Algorithms/Lerp.hpp>
+#include <SA/Maths/Algorithms/Equals.hpp>
+
+#endif // GUARD

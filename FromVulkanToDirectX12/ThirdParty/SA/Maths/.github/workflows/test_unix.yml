@@ -1,0 +1,139 @@
+# Copyright (c) 2023 Sapphire's Suite. All Rights Reserved.
+
+name: Linux
+
+
+# Trigger the action.
+on:
+  push:
+    branches:
+      - main
+      - master
+      - dev
+      - dev_*
+      - '!dev_osx'
+      - '!dev_macos'
+      - '!dev_win'
+      - '!dev_windows'
+
+
+
+# Settings common to all jobs.
+defaults:
+  run:
+    shell: bash
+
+
+
+# Variables common to all jobs.
+env:
+  CMAKE_V: '3.17.0'
+  CMAKE_OPTIONS: '-DSA_CI=1'
+
+
+
+# Job matrix
+jobs:
+
+  GNU:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config: [Debug, Release]
+        compiler_v: [10, 11, 12]
+
+
+    env:
+      gcc_compiler_v: -${{ matrix.compiler_v }}
+
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - uses: seanmiddleditch/gha-setup-ninja@master # Install Ninja.
+
+      - name: "[Package] Install GCC"
+        run: sudo apt-get install g++-${{ matrix.compiler_v }}
+
+      - name: Generate Project
+        run: cmake --preset="GCC" ${{ env.CMAKE_OPTIONS }}
+
+      - name: Build Project
+        run: cmake --build --preset="GCC ${{ matrix.config }}" --verbose
+
+      - name: Run CTests
+        run: ctest --preset="GCC ${{ matrix.config }}" -V
+
+
+
+  Clang:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config: [Debug, Release]
+        compiler_v: [12, 13, 14]
+
+
+    env:
+      clang_compiler_v: -${{ matrix.compiler_v }}
+
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - uses: seanmiddleditch/gha-setup-ninja@master # Install Ninja.
+
+      - name: "[Package] Install LLVM and Clang"
+        run: sudo apt-get install clang-${{ matrix.compiler_v }}
+
+      - name: Generate Project
+        run: cmake --preset="Clang" ${{ env.CMAKE_OPTIONS }}
+
+      - name: Build Project
+        run: cmake --build --preset="Clang ${{ matrix.config }}" --verbose
+
+      - name: Run CTests
+        run: ctest --preset="Clang ${{ matrix.config }}" -V
+
+
+
+  Options:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config: [Release]
+        option:
+          - -DSA_MATHS_USE_LOGGER_OPT=ON
+          - -DSA_MATHS_INTRINSICS_OPT=ON
+          - -DSA_MATHS_USE_LOGGER_OPT=ON -DSA_MATHS_INTRINSICS_OPT=ON
+
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - uses: seanmiddleditch/gha-setup-ninja@master # Install Ninja.
+
+      - name: "[Package] Install LLVM and Clang"
+        run: sudo apt-get install clang
+
+      - name: Generate Project
+        run: cmake --preset="Clang" ${{ matrix.option }} ${{ env.CMAKE_OPTIONS }}
+
+      - name: Build Project
+        run: cmake --build --preset="Clang ${{ matrix.config }}" --verbose
+
+      - name: Run CTests
+        run: ctest --preset="Clang ${{ matrix.config }}" -V
+
